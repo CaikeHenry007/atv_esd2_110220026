@@ -13,9 +13,22 @@ public class Vetor {
           totalDeClientes = 0;
      }
 
+     private boolean foiExpandido = false;
+
      private void garatirEspaco() {
           if (totalDeClientes == clientes.length) {
                clientes = Arrays.copyOf(clientes, clientes.length * 2);
+               foiExpandido = true;
+          }
+     }
+
+     private void reduzirEspaco() {
+          if (!foiExpandido) {
+               return;
+          }
+          if (totalDeClientes <= clientes.length * 0.25) {
+               int novoTamanho = clientes.length / 2;
+               clientes = Arrays.copyOf(clientes, novoTamanho);
           }
      }
 
@@ -60,6 +73,13 @@ public class Vetor {
           return clientes[posicao];
      }
 
+     public Cliente pegarRemoverTodos(int posicao) {
+          if (posicao >= totalDeClientes) {
+               return null;
+          }
+          return clientes[posicao];
+     }
+
      public boolean contem(Cliente clienteBuscado) {
           for (int i = 0; i < totalDeClientes; i++) {
                if (clientes[i].equals(clienteBuscado)) {
@@ -78,6 +98,8 @@ public class Vetor {
           }
           clientes[totalDeClientes - 1] = null;
           totalDeClientes--;
+
+          reduzirEspaco();
      }
 
      public void removerUltimoElemento(int posicaoRemoverUltima) {
@@ -86,6 +108,27 @@ public class Vetor {
           }
           clientes[totalDeClientes - 1] = null;
           totalDeClientes--;
+
+          reduzirEspaco();
+     }
+
+     public void removerPrimeiroElemento(int posicaoRemoverPrimeira) {
+          if (!posicaoValida(posicaoRemoverPrimeira)) {
+               throw new IllegalArgumentException("Posicao Invalida");
+          }
+          for (int i = posicaoRemoverPrimeira; i < totalDeClientes - 1; i++) {
+               clientes[i] = clientes[i + 1];
+          }
+          totalDeClientes--;
+
+          reduzirEspaco();
+     }
+
+     public void removerTodosElementos() {
+          for (int i = 0; i < totalDeClientes - 1; i++) {
+               clientes[i] = null;
+          }
+          totalDeClientes = 0;
      }
 
 }
