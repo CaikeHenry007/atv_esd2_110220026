@@ -2,6 +2,7 @@ package listaestatica;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
@@ -182,6 +183,46 @@ public class VetorTest {
     }
 
     @Test
+    public void testRemoverPrimeiraPosicaoInvalida() {
+
+        assertThrows(IllegalArgumentException.class, () -> vetor.removerPrimeiroElemento(1));
+        assertThrows(IllegalArgumentException.class, () -> vetor.removerPrimeiroElemento(-1));
+
+        vetor.adicionar(cliente1);
+        assertThrows(IllegalArgumentException.class, () -> vetor.removerPrimeiroElemento(3));
+    }
+
+    @Test
+    public void testRemoverPrimeiraPosicaoValida() {
+
+        vetor.adicionar(cliente1); // fernando
+        vetor.adicionar(cliente2); // maria
+        vetor.adicionar(cliente3); // jose
+        vetor.removerPrimeiroElemento(0);
+
+        assertEquals(2, vetor.pegarTotalClientes());
+        assertEquals("Maria", vetor.pegar(0).getNome());
+        assertEquals("Jose", vetor.pegar(1).getNome());
+
+        vetor.removerPrimeiroElemento(0);
+
+        assertEquals(1, vetor.pegarTotalClientes());
+        assertEquals("Jose", vetor.pegar(0).getNome());
+    }
+
+    @Test
+    public void testRemoverTodosElementos() {
+
+        vetor.adicionar(cliente1); // fernando
+        vetor.adicionar(cliente2); // maria
+        vetor.adicionar(cliente3); // jose
+        vetor.removerTodosElementos();
+
+        assertEquals(0, vetor.pegarTotalClientes());
+        assertNull(vetor.pegarRemoverTodos(0));
+    }
+
+    @Test
     public void testGarantirEspacoCheio() {
         vetor.adicionar(cliente1);
         vetor.adicionar(cliente2);
@@ -209,4 +250,23 @@ public class VetorTest {
         assertEquals(5, vetor.tamanhoVetor());
 
     }
+
+    @Test
+    public void deveReduzirQuandoEstiverCom25PorCentoOuMenos() {
+
+        vetor.adicionar(cliente1);
+        vetor.adicionar(cliente2);
+        vetor.adicionar(cliente3);
+        vetor.adicionar(cliente4);
+        vetor.adicionar(cliente5);
+
+        assertEquals(8, vetor.tamanhoVetor());
+
+        vetor.remover(4);
+        vetor.remover(3);
+        vetor.remover(2);
+
+        assertEquals(4, vetor.tamanhoVetor());
+    }
+
 }
